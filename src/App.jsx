@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactGridLayout, {Responsive, WidthProvider} from 'react-grid-layout';
+import { Responsive, WidthProvider } from 'react-grid-layout';
 import './App.css';
 import '../node_modules/react-grid-layout/css/styles.css';
 import '../node_modules/react-resizable/css/styles.css';
@@ -7,47 +7,141 @@ import '../node_modules/react-resizable/css/styles.css';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 // let ResponsiveReactGridLayout = ReactGridLayout.Responsive;
 
+import Form from './Form'
+import Chart from './Chart'
+import Table from './Table'
+
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      display: 'A',
+      lock: true
+    };
+    this.layout = [
+      {
+        i: 'a',
+        x: 0,
+        y: 0,
+        w: 12,
+        h: 3,
+        minW: 12,
+        maxW: 12,
+        static: this.state.lock
+      },
+      {
+        i: 'b',
+        x: 0,
+        y: 0,
+        w: 1,
+        h: 6,
+        minH: 2,
+        isDraggable: !this.state.lock,
+        isResizable: !this.state.lock
+      },
+      {
+        i: 'c',
+        x: 1,
+        y: 1,
+        w: 11,
+        h: 6,
+        isDraggable: !this.state.lock,
+        isResizable: !this.state.lock
+      },
+      {
+        i: 'd',
+        x: 1,
+        y: 0,
+        w: 3,
+        h: 10,
+        isDraggable: !this.state.lock,
+        isResizable: !this.state.lock
+      },
+      {
+        i: 'e',
+        x: 5,
+        y: 0,
+        w: 8,
+        h: 10,
+        isDraggable: !this.state.lock,
+        isResizable: !this.state.lock
+      }
+
+
+    ];
+    this.layouts = {
+      lg: this.layout
+    }
+  }
+  componentWillUpdate(nextProps,nextState) {
+    this.layout.map(item => {
+      item.isDraggable = this.state.lock;
+      item.isResizable = this.state.lock;
+      return null
+    });
+    this.layouts = {
+      lg: this.layout
+    }
+
+  }
+  updateLayoutItem(layout){
+    this.layout = layout;
+    // console.log(layout);
+    // console.log('layout');
+  }
+  updateDisplay(str) {
+    this.setState({
+      display: str
+    })
+  }
+  toggleLock() {
+    this.setState((prevState, props) => {
+      return {lock: !prevState.lock}
+    })
+    // console.log("was " + this.state.lock)
+  }
+
   render() {
     // layout is an array of objects, see the demo for more complete usage
-    let layout = [
-      {i: 'a', x: 0, y: 0, w: 12, h: 1, static: true},
-      {i: 'b', x: 1, y: 0, w: 8, h: 8, minW: 2, maxW: 10}
-      // {i: 'c', x: 4, y: 0, w: 1, h: 2},
-      // {i: 'd', x: 2, y: 0, w: 1, h: 2}
-    ];
-    let layouts = {
-      lg : layout
-    }
+    
     return (
-      <div className="App hasBorder">
-          
-    
-      <ReactGridLayout className="layout hasBorder" 
-        layout={layout} cols={12} rowHeight={50} width={940}
-        margin={[6,6]}
-        >
-        <div className="hasBorder" key={'a'}>a</div>
-        <div className="hasBorder" key={'b'}>b</div>
-        <div className="hasBorder" key={'c'}>c</div>
-        <div className="hasBorder" key={'d'}>d</div>
-        <div className="hasBorder" key={'e'}>e</div>
-      </ReactGridLayout>
-
-      <ResponsiveReactGridLayout className="layout hasBorder" layouts={layouts}
-      breakpoints={{lg: 1200}} rowHeight={20} margin={[6,6]}
-      cols={{lg: 12}} >
-      <div className="hasBorder" key={"a"}>1</div>
-      <div className="hasBorder hasScroll" key={"b"}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae rutrum justo. In placerat est vel tellus blandit maximus. Cras eros augue, auctor a tincidunt ut, ullamcorper molestie diam. Nunc gravida convallis lacinia. Vestibulum eget vestibulum enim, non convallis nibh. Fusce feugiat, est at luctus lacinia, dolor velit maximus tortor, et euismod libero urna a justo. Suspendisse at mollis diam, tincidunt maximus eros. Sed accumsan ullamcorper sapien, vitae vestibulum dui molestie ut. Donec eu lacinia enim, sit amet tincidunt odio. Aliquam accumsan magna eu varius cursus. Praesent tristique ut felis nec viverra. Vivamus sit amet magna suscipit, ultricies orci tincidunt, faucibus tortor. Ut sagittis lectus quis nulla dignissim, non commodo ex sagittis. Pellentesque posuere commodo metus, at fringilla sem consectetur at.
+      <div className={!this.state.lock ? "App hasBorder" : "App"}>
+        <ResponsiveReactGridLayout 
+        className={!this.state.lock ? "layout hasBorder" : "layout"} layouts={ this.layouts } 
+        breakpoints={ { lg: 1200 } } rowHeight={ 24 } margin={ [6, 6] }
+          cols={ { lg: 12 } } 
+          onLayoutChange={(currentLayout) => this.updateLayoutItem(currentLayout)}>
+          <div className={!this.state.lock ? "hasBorder" : ""} key={ "a" }>
+            <span className="float right margin-right" onClick={() => this.toggleLock()}>
+              {!this.state.lock ? "Lock" : "Unlock"}
+            </span>
+            <h1 className="float left margin-left">Header</h1>
+          </div>
+          <div className={!this.state.lock ? "hasBorder" : "gray"} key={ "b" }>
+            <ul className="isNavbar">
+              <li><strong>Navbar</strong></li>
+              <li onClick={ () => this.updateDisplay("A") }>Entity A</li>
+              <li onClick={ () => this.updateDisplay("B") }>Entity B</li>
+            </ul>
+          </div>
+          <div className={!this.state.lock ? "hasBorder" : ""} key={ "c" }>
+            <Table/>
+          </div>
+          <div className={!this.state.lock ? "hasBorder" : ""} key={ "d" }>
+            <Form/>
+          </div>
+          <div className={!this.state.lock ? "hasBorder" : ""} key={ "e" }>
+            <Chart/>
+          </div>
+          <div className={!this.state.lock ? "hasBorder" : "purple"} key={ "f" }
+          data-grid={{x: 0, y: 0, w: 1, h: 1,isDraggable: !this.state.lock,
+        isResizable: !this.state.lock}}>F</div>
+          <div className={!this.state.lock ? "hasBorder" : "purple"} key={ "g" }
+          data-grid={{x: 0, y: 0, w: 1, h: 1,isDraggable: !this.state.lock,
+        isResizable: !this.state.lock}}>G</div>
+        </ResponsiveReactGridLayout>
       </div>
-      <div className="hasBorder" key={"c"}>3</div>
-    </ResponsiveReactGridLayout>
-    
-  
-
-      </div>
-    );
+      );
   }
 }
 

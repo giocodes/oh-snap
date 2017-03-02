@@ -26,6 +26,50 @@
 .hasBorder {
       border: 1px #d8d2d2 solid;
 }
-.hasScroll {
+.hasScroll, layout>div {
   overflow: auto;
+}
+.float.left {
+  float: left;
+}
+.float.right {
+  float: right;
+}
+.margin-left {
+  margin-left: 12px;
+}
+.margin-right {
+  margin-right: 12px;
+}
+
+.isNavbar {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+.isNavbar>li {
+  margin: 6px;
+  min-width: 80px;
+  float: left;
+}
+.fullSize {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+.blue {
+  background-color: #6db4e0;
+}
+.green {
+  background-color: #e75d6d;
+}
+.yellow {
+  background-color: #aae3ee;
+}
+.gray {
+  background-color:#fddab4;
+}
+.purple {
+  background-color:#94a5c3;
 }
